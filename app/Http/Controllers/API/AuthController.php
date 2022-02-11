@@ -89,7 +89,20 @@ class AuthController extends Controller
                     'message' => 'Nepravilan unos!'
                 ]);
             } else {
-                $token = $user->createToken($user->email . '_Token')->plainTextToken;
+
+                if ($user->role_as == 1) //1 = admin
+                {
+
+                    $role = 'admin';
+                    $token = $user->createToken($user->email . '_AdminToken', ['server:admin'])->plainTextToken;
+                } else {
+                    $role = '';
+
+                    $token = $user->createToken($user->email . '_Token', [''])->plainTextToken;
+                }
+
+
+
 
                 return response()->json([
 
@@ -97,6 +110,7 @@ class AuthController extends Controller
                     'username' => $user->name,
                     'token' => $token,
                     'message' => 'Uspesna prijava!',
+                    'role' => $role,
 
 
 
